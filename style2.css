@@ -7,18 +7,92 @@ a {
 }
 
 body {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(icone.png);
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(img/icone.png);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
     background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 20px;
 }
 
 footer {
-    position:fixed;
+    position: fixed;
     bottom: 0;
     right: 0;
     width: 100%;
     text-align: right;
     padding: 10px;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+/* Grade de opções de avatares */
+#opcoes-avatar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    /* 4 colunas */
+    gap: 15px;
+    margin-bottom: 30px;
+    max-width: 600px;
+}
+
+#opcoes-avatar img {
+    width: 100px;
+    height: 100px;
+    border: 3px solid transparent;
+    border-radius: 10px;
+    background-color: #e9ecef;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+#opcoes-avatar img:hover {
+    transform: scale(1.1);
+    border-color: #adb5bd;
+}
+
+/* Estilo para o avatar selecionado */
+#opcoes-avatar img.selecionado {
+    border-color: #007bff;
+    transform: scale(1.15);
+    box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
+}
+
+#avatar-escolhido {
+    border: 3px solid #28a745;
+    border-radius: 10px;
+    width: 150px;
+    height: 150px;
+}
+
+#url-escolhida {
+    font-family: monospace;
+    word-break: break-all;
+    background-color: #e9ecef;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-size: 12px;
+}
+
+button {
+    padding: 12px 25px;
+    font-size: 16px;
+    background-color: #17a2b8;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #138496;
 }

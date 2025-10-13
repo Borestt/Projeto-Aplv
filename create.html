@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,14 +9,29 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+    <link href="https://api.dicebear.com/9.x/pixel-art/svg">
     <title>Create Your Char!</title>
 </head>
+
 <body>
     <a href="index.html">Voltar</a>
+    
+        <h1>Escolha seu Avatar</h1>
+    <button onclick="gerarOpcoes()">Gerar Novas Opções</button>
+    
+    <div id="opcoes-avatar">
+        </div>
 
+    <div id="resultado">
+        <h2>Seu Avatar Escolhido:</h2>
+        <img id="avatar-escolhido" src="" alt="Nenhum avatar selecionado">
+        <p id="url-escolhida">Clique em um avatar acima para selecioná-lo.</p>
+    </div>
 
     <footer>
         <p>version 0.0.05</p>
     </footer>
+    <script src="interface.js"></script>
 </body>
+
 </html>

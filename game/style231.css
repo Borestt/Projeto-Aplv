@@ -1,0 +1,542 @@
+ * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            font-family: 'Georgia', serif;
+            background: #000;
+        }
+
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: #1a1410;
+            image-rendering: pixelated;
+        }
+
+        #dungeon-map {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: grid;
+            grid-template-columns: repeat(20, 40px);
+            grid-template-rows: repeat(15, 40px);
+            gap: 0;
+            border: 4px solid #2a2420;
+            box-shadow: 0 0 50px rgba(0,0,0,0.9);
+        }
+
+        /* Tiles do mapa */
+        .tile {
+            width: 40px;
+            height: 40px;
+            position: relative;
+        }
+
+        .floor {
+            background: #4a3728;
+            background-image: 
+                linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px),
+                linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px);
+            background-size: 8px 8px;
+        }
+
+        .wall {
+            background: #2a2420;
+            background-image: 
+                radial-gradient(circle at 20% 30%, #3a3430 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, #3a3430 0%, transparent 50%);
+            border: 1px solid #1a1410;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .door {
+            background: #5a4a3a;
+            border: 2px solid #3a2a1a;
+            position: relative;
+        }
+
+        .door::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: #d4af37;
+            border-radius: 50%;
+        }
+
+        /* Tocha */
+        .torch {
+            position: absolute;
+            width: 12px;
+            height: 20px;
+            background: #8B4513;
+            border-radius: 2px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .torch::after {
+            content: '🔥';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 18px;
+            animation: flicker 1.5s infinite;
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; transform: translateX(-50%) scale(1); }
+            50% { opacity: 0.8; transform: translateX(-50%) scale(0.95); }
+        }
+
+        /* Baú */
+        .chest {
+            position: absolute;
+            width: 30px;
+            height: 25px;
+            background: #8B4513;
+            border: 2px solid #654321;
+            border-radius: 4px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .chest:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .chest::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 2px;
+            background: #d4af37;
+        }
+
+        .chest::after {
+            content: '🔒';
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            font-size: 12px;
+        }
+
+        .chest.opened::after {
+            content: '✨';
+        }
+
+        /* Personagem */
+        #player {
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            z-index: 100;
+            transition: all 0.15s;
+            pointer-events: none;
+        }
+
+        .player-sprite {
+            width: 100%;
+            height: 100%;
+            background: #4169E1;
+            border-radius: 50%;
+            border: 3px solid #2c4a9e;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+        }
+
+        .player-sprite::before {
+            content: '🗡️';
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            font-size: 16px;
+            transform: rotate(45deg);
+        }
+
+        .player-sprite::after {
+            content: '⚔️';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
+        }
+
+        /* Inimigos */
+        .enemy {
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            z-index: 50;
+            transition: transform 0.2s;
+        }
+
+        .enemy:hover {
+            transform: scale(1.15);
+        }
+
+        .goblin {
+            background: #228B22;
+            border-radius: 50%;
+            border: 3px solid #1a5a1a;
+            position: relative;
+            animation: enemy-idle 2s infinite;
+        }
+
+        .goblin::before {
+            content: '👺';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 22px;
+        }
+
+        .skeleton {
+            background: #f5f5dc;
+            border-radius: 50%;
+            border: 3px solid #d3d3d3;
+            position: relative;
+            animation: enemy-idle 2.5s infinite;
+        }
+
+        .skeleton::before {
+            content: '💀';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 22px;
+        }
+
+        .demon {
+            background: #8B0000;
+            border-radius: 50%;
+            border: 3px solid #4a0000;
+            position: relative;
+            animation: enemy-idle 1.8s infinite;
+        }
+
+        .demon::before {
+            content: '👿';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 22px;
+        }
+
+        @keyframes enemy-idle {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-2px) rotate(-5deg); }
+            75% { transform: translateY(2px) rotate(5deg); }
+        }
+
+        .enemy-hp {
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 5px;
+            background: #333;
+            border-radius: 3px;
+            overflow: hidden;
+            border: 1px solid #000;
+        }
+
+        .enemy-hp-bar {
+            height: 100%;
+            background: linear-gradient(to right, #ff0000, #ff6b6b);
+            transition: width 0.3s;
+        }
+
+        /* Interface de Combate */
+        #battle-ui {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #1a0a00 0%, #2a1510 100%);
+            border: 6px solid #d4af37;
+            border-radius: 20px;
+            padding: 35px;
+            min-width: 450px;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.95);
+        }
+
+        #battle-ui.active {
+            display: block;
+            animation: battle-appear 0.4s;
+        }
+
+        @keyframes battle-appear {
+            from {
+                transform: translate(-50%, -50%) scale(0.7) rotateX(20deg);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, -50%) scale(1) rotateX(0deg);
+                opacity: 1;
+            }
+        }
+
+        .battle-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .battle-header h2 {
+            color: #d4af37;
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.7);
+            letter-spacing: 2px;
+        }
+
+        .battle-header p {
+            color: #ccc;
+            font-style: italic;
+        }
+
+        .battle-stats {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-box {
+            background: rgba(212,175,55,0.1);
+            padding: 20px;
+            border-radius: 12px;
+            flex: 1;
+            border: 2px solid rgba(212,175,55,0.3);
+        }
+
+        .stat-box h3 {
+            color: #d4af37;
+            font-size: 18px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .stat-box p {
+            color: #fff;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+        .hp-bar {
+            width: 100%;
+            height: 24px;
+            background: #1a0a00;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 12px;
+            border: 2px solid #d4af37;
+        }
+
+        .hp-fill {
+            height: 100%;
+            transition: width 0.4s;
+            position: relative;
+        }
+
+        .hp-fill.player {
+            background: linear-gradient(to right, #00ff00, #90EE90);
+        }
+
+        .hp-fill.enemy {
+            background: linear-gradient(to right, #ff0000, #ff6b6b);
+        }
+
+        .battle-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .battle-btn {
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border: 3px solid;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Georgia', serif;
+        }
+
+        .attack-btn {
+            background: linear-gradient(to bottom, #8B0000, #4a0000);
+            color: #fff;
+            border-color: #d4af37;
+            box-shadow: 0 4px 0 #4a0000, 0 6px 15px rgba(0,0,0,0.5);
+        }
+
+        .attack-btn:hover {
+            background: linear-gradient(to bottom, #a00000, #6a0000);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #4a0000, 0 8px 20px rgba(0,0,0,0.6);
+        }
+
+        .attack-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #4a0000, 0 3px 10px rgba(0,0,0,0.5);
+        }
+
+        .defend-btn {
+            background: linear-gradient(to bottom, #4169E1, #2c4a9e);
+            color: #fff;
+            border-color: #d4af37;
+            box-shadow: 0 4px 0 #1a2a5e, 0 6px 15px rgba(0,0,0,0.5);
+        }
+
+        .defend-btn:hover {
+            background: linear-gradient(to bottom, #5179f1, #3c5aae);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #1a2a5e, 0 8px 20px rgba(0,0,0,0.6);
+        }
+
+        .run-btn {
+            background: linear-gradient(to bottom, #555, #222);
+            color: #fff;
+            border-color: #888;
+            box-shadow: 0 4px 0 #111, 0 6px 15px rgba(0,0,0,0.5);
+        }
+
+        .run-btn:hover {
+            background: linear-gradient(to bottom, #666, #333);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #111, 0 8px 20px rgba(0,0,0,0.6);
+        }
+
+        .battle-log {
+            margin-top: 20px;
+            padding: 18px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 10px;
+            max-height: 120px;
+            overflow-y: auto;
+            border: 2px solid rgba(212,175,55,0.3);
+        }
+
+        .battle-log p {
+            color: #fff;
+            margin: 6px 0;
+            font-size: 14px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+        }
+
+        /* HUD */
+        #hud {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, #1a0a00 0%, #2a1510 100%);
+            padding: 20px 25px;
+            border-radius: 12px;
+            color: white;
+            z-index: 500;
+            min-width: 220px;
+            border: 3px solid #d4af37;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.7);
+        }
+
+        #hud h3 {
+            color: #d4af37;
+            margin-bottom: 12px;
+            font-size: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        }
+
+        #hud p {
+            margin: 8px 0;
+            font-size: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #hud .stat-value {
+            color: #d4af37;
+            font-weight: bold;
+        }
+
+        /* Instruções */
+        #instructions {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #1a0a00 0%, #2a1510 100%);
+            padding: 20px 25px;
+            border-radius: 12px;
+            color: white;
+            z-index: 500;
+            border: 3px solid #d4af37;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.7);
+        }
+
+        #instructions h3 {
+            color: #d4af37;
+            margin-bottom: 12px;
+            font-size: 18px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        }
+
+        #instructions p {
+            margin: 6px 0;
+            font-size: 14px;
+        }
+
+        .victory-msg {
+            color: #00ff00 !important;
+            font-weight: bold;
+            font-size: 16px !important;
+        }
+
+        .defeat-msg {
+            color: #ff0000 !important;
+            font-weight: bold;
+            font-size: 16px !important;
+        }
+
+        .critical-hit {
+            color: #ffd700 !important;
+            font-weight: bold;
+            animation: glow 1s;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 5px #ffd700; }
+            50% { text-shadow: 0 0 20px #ffd700; }
+        }
+
+        .gold-text {
+            color: #ffd700;
+            font-weight: bold;
+        }

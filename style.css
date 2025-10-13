@@ -21,7 +21,7 @@ h1 {
 }
 
 .Play:hover {
-    background-image: url(handpainted.jpg);
+    background-image: url(img/handpainted.jpg);
     border-radius: 10px;
     font-size: xx-large
 }
@@ -34,7 +34,7 @@ h1 {
     background: transparent;
     border: none;
     
-    background-image: url(pixels.jpg);
+    background-image: url(img/pixels.jpg);
     color: white;
     border: none;
 
@@ -42,7 +42,7 @@ h1 {
 }
 
 .Config:hover {
-    background-image: url(handpainted.jpg);
+    background-image: url(img/handpainted.jpg);
     border-radius: 10px;
     font-size: xx-large;
 }
@@ -55,7 +55,7 @@ h1 {
     font-size: 18px;
     background: transparent;
     border: none;
-    background-image: url(pixels.jpg);
+    background-image: url(img/pixels.jpg);
     color: white;
     border: none;
 
@@ -63,13 +63,13 @@ h1 {
 }
 
 .Info:hover {
-    background-image: url(handpainted.jpg);
+    background-image: url(img/handpainted.jpg);
     border-radius: 10px;
     font-size: xx-large;
 }
 
 body {
-  background-image: url(batalha.png);
+  background-image: url(img/batalha.png);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
