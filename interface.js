@@ -31,6 +31,7 @@ function gerarOpcoes() {
 }
 
 // Função chamada quando um avatar é clicado
+// ...existing code...
 function selecionarAvatar(imgElement) {
     // 1. Remove a classe 'selecionado' de qualquer outra imagem
     const todasAsImagens = opcoesContainer.querySelectorAll('img');
@@ -39,9 +40,14 @@ function selecionarAvatar(imgElement) {
     // 2. Adiciona a classe 'selecionado' à imagem clicada
     imgElement.classList.add('selecionado');
 
-    // 3. Mostra o avatar escolhido em tamanho maior e exibe sua URL
+    // 3. Mostra o avatar escolhido em tamanho maior
     avatarEscolhidoImg.src = imgElement.src;
-    urlEscolhidaP.textContent = imgElement.src;
+
+    // Remove o texto de instrução
+    const textoInstrucao = document.getElementById('url-escolhida');
+    if (textoInstrucao) {
+        textoInstrucao.textContent = '';
+    }
 }
 
 // Gera as opções iniciais assim que a página carrega
