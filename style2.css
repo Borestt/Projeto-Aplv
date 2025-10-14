@@ -28,7 +28,8 @@ footer {
     padding: 10px;
 }
 
-h1, h2 {
+h1,
+h2 {
     text-align: center;
 }
 
@@ -54,7 +55,7 @@ h1, h2 {
 
 #opcoes-avatar img:hover {
     transform: scale(1.1);
-    border-color: #adb5bd;
+    border-color: #2bff00;
 }
 
 /* Estilo para o avatar selecionado */
@@ -65,22 +66,21 @@ h1, h2 {
 }
 
 #avatar-escolhido {
+    position: fixed;
+    left: 30px;
+    /* Distância da borda esquerda */
+    bottom: 30px;
+    /* Distância da borda inferior */
     border: 3px solid #28a745;
     border-radius: 10px;
     width: 150px;
     height: 150px;
+    background: none;
+    margin: 0;
+    z-index: 1000;
 }
 
-#url-escolhida {
-    font-family: monospace;
-    word-break: break-all;
-    background-color: #e9ecef;
-    padding: 10px;
-    border-radius: 5px;
-    margin-top: 10px;
-    font-size: 12px;
-}
-
+/* ...existing code... */
 button {
     padding: 12px 25px;
     font-size: 16px;
@@ -91,8 +91,34 @@ button {
     cursor: pointer;
     margin-bottom: 20px;
     transition: background-color 0.2s;
+    width: 100%; /* Garante que o botão ocupe toda a largura do container */
+    box-sizing: border-box;
 }
+/* ...existing code... */
 
 button:hover {
     background-color: #138496;
+}
+
+#resultado {
+    display: flex;
+    align-items: flex-start;
+    gap: 30px;
+    margin-top: 30px;
+    max-width: 500px;
+}
+
+#atributos-personagem {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#refresh {
+    width: 220px;
+    font-size: 18px;
+    padding: 14px 0;
+    margin-bottom: 30px;
+    border-radius: 8px;
+    box-sizing: border-box;
 }

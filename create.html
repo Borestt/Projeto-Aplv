@@ -15,17 +15,37 @@
 
 <body>
     <a href="index.html">Voltar</a>
-    
-        <h1>Escolha seu Avatar</h1>
-    <button onclick="gerarOpcoes()">Gerar Novas Opções</button>
-    
+
+    <h1>Escolha seu Avatar</h1>
+    <button onclick="gerarOpcoes()" id="refresh">Gerar Novas Opções</button>
+
     <div id="opcoes-avatar">
-        </div>
+    </div>
 
     <div id="resultado">
         <h2>Seu Avatar Escolhido:</h2>
-        <img id="avatar-escolhido" src="" alt="Nenhum avatar selecionado">
-        <p id="url-escolhida">Clique em um avatar acima para selecioná-lo.</p>
+        <img id="avatar-escolhido">
+    </div>
+
+    <div id="atributos-personagem">
+        <label for="classe-personagem">Escolha sua classe:</label>
+        <select id="classe-personagem">
+            <option value="">Selecione...</option>
+            <option value="guerreiro">Guerreiro</option>
+            <option value="mago">Mago</option>
+            <option value="guardiao">Guardião</option>
+        </select>
+
+        <!-- ...existing code... -->
+        <div id="ficha-rpg"
+            style="background: rgba(0,0,0,0.7); border-radius: 12px; padding: 20px; max-width: 250px; color: #fff;">
+            <h2>Ficha do Personagem</h2>
+            <p>❤️ <strong>HP:</strong> <span id="ficha-hp">100</span></p>
+            <p>⚔️ <strong>ATK:</strong> <span id="ficha-atk">20</span></p>
+            <p>🛡️ <strong>DEF:</strong> <span id="ficha-def">5</span></p>
+            <button id="rolar-dados-btn" style="margin-top: 15px; width: 100%;">Role os Atributos!</button>
+        </div>
+
     </div>
 
     <footer>
