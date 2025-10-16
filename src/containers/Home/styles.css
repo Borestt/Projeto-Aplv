@@ -1,0 +1,100 @@
+@keyframes pulsar {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+body {
+  background-image: url(/img/batalha.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+}
+
+h1 {
+  text-align: center;
+  color: rgb(0, 0, 0);
+  margin-top: 40px;
+}
+
+.Play {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  font-size: 18px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: white;
+}
+
+.Play:hover {
+  animation: pulsar 1.3s ease-in-out infinite;
+  cursor: pointer;
+  border-radius: 10px;
+  font-size: xx-large;
+}
+
+.Config {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  font-size: 18px;
+  background: transparent;
+  border: none;
+  background-image: url(/img/pixels.jpg);
+  color: white;
+  cursor: pointer;
+}
+
+.Config:hover {
+  animation: pulsar 1.3s ease-in-out infinite;
+  cursor: pointer;
+  border-radius: 10px;
+  font-size: xx-large;
+}
+
+.Info {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  font-size: 18px;
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.Info:hover {
+  animation: pulsar 1.3s ease-in-out infinite;
+  cursor: pointer;
+  border-radius: 10px;
+  font-size: xx-large;
+}
+
+.menu {
+  text-align: center;
+  margin-top: 210px;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  text-align: right;
+  padding: 10px;
+}
+
+a {
+  text-decoration: none;
+}
