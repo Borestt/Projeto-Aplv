@@ -1,0 +1,43 @@
+/* Estilos para o container de informações */
+.infos-container {
+	max-width: 900px;
+	margin: 28px auto;
+	padding: 20px 24px;
+	color: #f5f5f5;
+	background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.55));
+	border-radius: 12px;
+	box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+	font-family: Inter, 'Segoe UI', Roboto, system-ui, -apple-system, 'Helvetica Neue', Arial;
+}
+
+.infos-container h1 {
+	margin: 0 0 12px 0;
+	font-size: 1.8rem;
+	color: #fff;
+}
+
+.infos-container p {
+	line-height: 1.6;
+	margin: 12px 0;
+	color: #e8e8e8;
+}
+
+.infos-extra {
+	margin-top: 18px;
+	padding: 14px;
+	background: rgba(255,255,255,0.03);
+	border-radius: 8px;
+	border: 1px solid rgba(255,255,255,0.04);
+}
+
+@media (max-width: 640px) {
+	.infos-container {
+		padding: 14px 12px;
+		margin: 18px;
+	}
+
+	.infos-container h1 {
+		font-size: 1.4rem;
+	}
+}
+
