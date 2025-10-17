@@ -1,31 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crawler Lover RPG</title>
     <link rel="stylesheet" href="style.css">
-    <title>Prototype</title>
-    <link rel="icon" type="image/png" href="icone.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
-</head>
+    <style>
+        
+    </style>
+    <div id="game-container">
+        <div id="viewport">
+            <div id="dungeon-map"></div>
+        </div>
 
-<body>
-    <h1>RPG MENU Prototype</h1>
+        <div id="hud">
+            <h3>⚔️ Aventureiro</h3>
+            <p>❤️ HP: <span class="stat-value"><span id="player-hp">100</span>/100</span></p>
+            <p>⚔️ ATK: <span class="stat-value" id="player-atk">20</span></p>
+            <p>🛡️ DEF: <span class="stat-value" id="player-def">5</span></p>
+            <p>💰 Ouro: <span class="stat-value" id="gold">0</span></p>
+            <p>🏆 Mortes: <span class="stat-value" id="kills">0</span></p>
+        </div>
 
-    <div class="menu">
-        <a href="create.html"><button class="Play">New Game</button></a>
-        <button class="Config">Settings</button>
-        <button class="Info">Information</button>
+        <div id="instructions">
+            <h3>🗺️ Como Jogar</h3>
+            <p>⬆️⬇️⬅️➡️ ou WASD</p>
+            <p>🖱️ Clique nos inimigos</p>
+            <p>📦 Chegue perto dos baús</p>
+        </div>
 
+        <div id="battle-ui">
+            <div class="battle-header">
+                <h2>⚔️ COMBATE ⚔️</h2>
+                <p id="enemy-name">Inimigo Apareceu!</p>
+            </div>
+            
+            <div class="battle-stats">
+                <div class="stat-box">
+                    <h3>🛡️ Você</h3>
+                    <p>HP: <span id="battle-player-hp">100</span></p>
+                    <div class="hp-bar">
+                        <div class="hp-fill player" id="battle-player-hp-bar"></div>
+                    </div>
+                    <p>ATK: <span id="battle-player-atk">20</span></p>
+                    <p>DEF: <span id="battle-player-def">5</span></p>
+                </div>
+                
+                <div class="stat-box">
+                    <h3>👹 Inimigo</h3>
+                    <p>HP: <span id="battle-enemy-hp">50</span></p>
+                    <div class="hp-bar">
+                        <div class="hp-fill enemy" id="battle-enemy-hp-bar"></div>
+                    </div>
+                    <p>ATK: <span id="battle-enemy-atk">10</span></p>
+                    <p>DEF: <span id="battle-enemy-def">2</span></p>
+                </div>
+            </div>
+
+            <div class="battle-actions">
+                <button class="battle-btn attack-btn" id="attack-btn">⚔️ Atacar</button>
+                <button class="battle-btn defend-btn" id="defend-btn">🛡️ Defender</button>
+                <button class="battle-btn run-btn" id="run-btn">🏃 Fugir</button>
+            </div>
+
+            <div class="battle-log" id="battle-log"></div>
+        </div>
     </div>
 
+    <script src="script.js"></script>
 
-    <footer>
-        <p>version 0.0.05</p>
-    </footer>
 </body>
-
 </html>
