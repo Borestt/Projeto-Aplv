@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
+import './styles.css';
+import { Link } from 'react-router-dom';
 
-// Um componente separado para o avatar, para manter o código limpo
 function Avatar({ seed, onClick }) {
   const apiUrl = `https://api.dicebear.com/7.x/pixel-art/svg?seed=${seed}`;
   return (
@@ -9,63 +10,97 @@ function Avatar({ seed, onClick }) {
       alt={`Avatar ${seed}`}
       width="100"
       height="100"
-      onClick={() => onClick(seed)} // Chama a função do pai quando clicado
-      style={{ cursor: 'pointer', margin: '5px', border: '2px solid transparent' }}
+      onClick={() => onClick(seed)}
+      className="avatar-image"
     />
   );
 }
 
-// Componente principal da tela de criação
 function CreateCharacterScreen() {
-  // --- ESTADO (STATE) ---
-  // Guarda os dados que podem mudar na tela
   const [opcoesAvatar, setOpcoesAvatar] = useState([]);
   const [avatarEscolhido, setAvatarEscolhido] = useState(null);
   const [classe, setClasse] = useState('');
   const [stats, setStats] = useState({ hp: 100, atk: 20, def: 5 });
+  const [rolagensRestantes, setRolagensRestantes] = useState(3);
 
-  // --- FUNÇÕES (HANDLERS) ---
-  // Funções que alteram o estado
   const gerarOpcoes = () => {
-    // Gera 4 "seeds" (sementes) aleatórias para os avatares
     const novasOpcoes = Array.from({ length: 4 }, () => Math.random().toString(36).substring(7));
     setOpcoesAvatar(novasOpcoes);
   };
 
   const rolarAtributos = () => {
-    const hp = Math.floor(Math.random() * 50) + 80; // HP entre 80 e 130
-    const atk = Math.floor(Math.random() * 15) + 10; // ATK entre 10 e 25
-    const def = Math.floor(Math.random() * 10) + 5;  // DEF entre 5 e 15
-    setStats({ hp, atk, def });
+    if (rolagensRestantes <= 0) {
+      alert("Você não tem mais rolagens!");
+      return;
+    }
+    if (!classe) {
+      alert("Por favor, escolha uma classe antes de rolar os atributos!");
+      return;
+    }
+
+    let minHp, maxHp, minAtk, maxAtk, minDef, maxDef;
+
+    switch (classe) {
+      case 'guerreiro':
+        minHp = 100; maxHp = 180;
+        minAtk = 30; maxAtk = 50;
+        minDef = 15; maxDef = 25;
+        break;
+      case 'mago':
+        minHp = 40; maxHp = 80;
+        minAtk = 50; maxAtk = 80;
+        minDef = 5; maxDef = 12;
+        break;
+      case 'guardiao':
+        minHp = 60; maxHp = 100;
+        minAtk = 15; maxAtk = 30;
+        minDef = 50; maxDef = 80;
+        break;
+      default:
+        return;
+    }
+
+    const gerarStat = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+    setStats({
+      hp: gerarStat(minHp, maxHp),
+      atk: gerarStat(minAtk, maxAtk),
+      def: gerarStat(minDef, maxDef),
+    });
+
+    setRolagensRestantes(rolagensRestantes - 1);
   };
-  
-  // --- EFEITOS (EFFECTS) ---
-  // Roda o código quando o componente é montado pela primeira vez
-  useEffect(() => {
-    gerarOpcoes(); // Gera as opções iniciais de avatar
-  }, []); // O array vazio [] significa que só roda uma vez
 
-  // Roda quando a 'classe' muda, para definir os stats base
   useEffect(() => {
-    if (classe === 'guerreiro') setStats({ hp: 120, atk: 25, def: 10 });
-    else if (classe === 'mago') setStats({ hp: 80, atk: 35, def: 5 });
-    else if (classe === 'guardiao') setStats({ hp: 150, atk: 15, def: 20 });
-  }, [classe]); // Roda sempre que a variável 'classe' mudar
+    gerarOpcoes();
+  }, []);
 
-  // --- RENDERIZAÇÃO (JSX) ---
+  useEffect(() => {
+    if (classe === 'guerreiro') setStats({ hp: 0, atk: 0, def: 0 });
+    else if (classe === 'mago') setStats({ hp: 0, atk: 0, def: 0 });
+    else if (classe === 'guardiao') setStats({ hp: 0, atk: 0, def: 0 });
+  }, [classe]);
+
   return (
-    <div style={{ textAlign: 'center' }}>
+    <div className="create-character-container">
+
+      <Link to="/">
+        <p className="backButton">
+          <svg viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#ff6f00" transform="rotate(0)">
+            <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>back_2_fill</title> <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="Arrow" transform="translate(-480.000000, -50.000000)" fill-rule="nonzero"> <g id="back_2_fill" transform="translate(480.000000, 50.000000)"> <path d="M24,0 L24,24 L0,24 L0,0 L24,0 Z M12.5934901,23.257841 L12.5819402,23.2595131 L12.5108777,23.2950439 L12.4918791,23.2987469 L12.4918791,23.2987469 L12.4767152,23.2950439 L12.4056548,23.2595131 C12.3958229,23.2563662 12.3870493,23.2590235 12.3821421,23.2649074 L12.3780323,23.275831 L12.360941,23.7031097 L12.3658947,23.7234994 L12.3769048,23.7357139 L12.4804777,23.8096931 L12.4953491,23.8136134 L12.4953491,23.8136134 L12.5071152,23.8096931 L12.6106902,23.7357139 L12.6232938,23.7196733 L12.6232938,23.7196733 L12.6266527,23.7031097 L12.609561,23.275831 C12.6075724,23.2657013 12.6010112,23.2592993 12.5934901,23.257841 L12.5934901,23.257841 Z M12.8583906,23.1452862 L12.8445485,23.1473072 L12.6598443,23.2396597 L12.6498822,23.2499052 L12.6498822,23.2499052 L12.6471943,23.2611114 L12.6650943,23.6906389 L12.6699349,23.7034178 L12.6699349,23.7034178 L12.678386,23.7104931 L12.8793402,23.8032389 C12.8914285,23.8068999 12.9022333,23.8029875 12.9078286,23.7952264 L12.9118235,23.7811639 L12.8776777,23.1665331 C12.8752882,23.1545897 12.8674102,23.1470016 12.8583906,23.1452862 L12.8583906,23.1452862 Z M12.1430473,23.1473072 C12.1332178,23.1423925 12.1221763,23.1452606 12.1156365,23.1525954 L12.1099173,23.1665331 L12.0757714,23.7811639 C12.0751323,23.7926639 12.0828099,23.8018602 12.0926481,23.8045676 L12.108256,23.8032389 L12.3092106,23.7104931 L12.3186497,23.7024347 L12.3186497,23.7024347 L12.3225043,23.6906389 L12.340401,23.2611114 L12.337245,23.2485176 L12.337245,23.2485176 L12.3277531,23.2396597 L12.1430473,23.1473072 Z" id="MingCute" fill-rule="nonzero"> </path> <path d="M7.16075,10.9724 C8.44534,9.45943 10.3615,8.5 12.5,8.5 C16.366,8.5 19.5,11.634 19.5,15.5 C19.5,16.3284 20.1715,17 21,17 C21.8284,17 22.5,16.3284 22.5,15.5 C22.5,9.97715 18.0228,5.5 12.5,5.5 C9.55608,5.5 6.91086,6.77161 5.08155,8.79452 L4.73527,6.83068 C4.59142,6.01484 3.81343,5.47009 2.99759,5.61394 C2.18175,5.7578 1.637,6.53578 1.78085,7.35163 L2.82274,13.2605 C2.89182,13.6523 3.11371,14.0005 3.43959,14.2287 C3.84283,14.5111 4.37354,14.5736 4.82528,14.4305 L10.4693,13.4353 C11.2851,13.2915 11.8299,12.5135 11.686,11.6976 C11.5422,10.8818 10.7642,10.337 9.94833,10.4809 L7.16075,10.9724 Z" id="路径" fill="#ff6f00"> </path> </g> </g> </g> </g>
+          </svg>
+        </p>
+      </Link>
+
       <h1>Escolha seu Avatar</h1>
       <button onClick={gerarOpcoes}>Gerar Novas Opções</button>
 
-      {/* Mapeia o array de opções para renderizar os componentes Avatar */}
-      <div id="opcoes-avatar" style={{ margin: '20px 0' }}>
+      <div id="opcoes-avatar" className="avatar-options">
         {opcoesAvatar.map(seed => (
           <Avatar key={seed} seed={seed} onClick={setAvatarEscolhido} />
         ))}
       </div>
 
-      {/* Renderização condicional: só mostra o avatar escolhido se ele existir */}
       {avatarEscolhido && (
         <div id="resultado">
           <h2>Seu Avatar Escolhido:</h2>
@@ -74,14 +109,13 @@ function CreateCharacterScreen() {
             alt="Avatar escolhido"
             width="150"
             height="150"
-            style={{ border: '3px solid gold', borderRadius: '10px' }}
+            className="chosen-avatar"
           />
         </div>
       )}
 
-      <div id="atributos-personagem" style={{ marginTop: '20px' }}>
-        <label htmlFor="classe-personagem">Escolha sua classe: </label>
-        {/* O valor do select é controlado pelo estado 'classe' */}
+      <div id="atributos-personagem" className="character-attributes">
+        <label htmlFor="classe-personagem">Classe: </label>
         <select value={classe} onChange={(e) => setClasse(e.target.value)}>
           <option value="">Selecione...</option>
           <option value="guerreiro">Guerreiro</option>
@@ -89,23 +123,30 @@ function CreateCharacterScreen() {
           <option value="guardiao">Guardião</option>
         </select>
 
-        <div style={{
-            background: 'rgba(0,0,0,0.7)', borderRadius: '12px', padding: '20px',
-            maxWidth: '250px', color: '#fff', margin: '20px auto'
-          }}>
+        <div className="stats-card">
           <h2>Ficha do Personagem</h2>
-          {/* Os valores vêm do estado 'stats' */}
-          <p>❤️ <strong>HP:</strong> <span>{stats.hp}</span></p>
-          <p>⚔️ <strong>ATK:</strong> <span>{stats.atk}</span></p>
-          <p>🛡️ <strong>DEF:</strong> <span>{stats.def}</span></p>
-          <button onClick={rolarAtributos} style={{ marginTop: '15px', width: '100%' }}>
+          <p>❤️ <strong>HP:</strong> <span className='hp'>{stats.hp}</span></p>
+          <p>⚔️ <strong>ATK:</strong> <span className='atk'>{stats.atk}</span></p>
+          <p>🛡️ <strong>DEF:</strong> <span className='def'>{stats.def}</span></p>
+
+          <button
+            onClick={rolarAtributos}
+            disabled={rolagensRestantes <= 0 || !classe}
+            className="roll-button"
+          >
             Role os Atributos!
           </button>
+          <p className="rolls-remaining">
+            Rolagens restantes: {rolagensRestantes}
+          </p>
         </div>
       </div>
 
+      <Link to="/game">
+        <button className='startGame'>COMEÇAR AVENTURA!</button>
+      </Link>
       <footer>
-        <p>version 0.0.05</p>
+        <p>version 0.0.08</p>
       </footer>
     </div>
   );

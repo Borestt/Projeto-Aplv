@@ -1,3 +1,48 @@
-* {
+.backButton {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+
+    /* Novo Layout com Ícone */
+    display: flex;
+    /* ATIVA O FLEXBOX! */
+    align-items: center;
+    /* Alinha o ícone e o texto verticalmente */
+    gap: 10px;
+    /* Cria um espaço de 10px entre o ícone e o texto */
+
+    /* Estilo Visual */
+    background-color: rgba(10, 5, 5, 0.75);
+    color: #dcdcdc;
+    /* Cinza um pouco mais claro */
+    border: 2px solid #554;
+    /* Borda metálica mais escura */
+    border-radius: 6px;
+    padding: 8px 15px;
+    /* Ajuste no padding */
     font-family: "Pixelify Sans", sans-serif;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    /* Sombra mais pronunciada */
+    margin: 0;
+    cursor: pointer;
+
+    /* Transição Suave */
+    transition: all 0.2s ease-in-out;
+}
+
+.backButton svg {
+  width: 18px; /* Tamanho do ícone */
+  height: 18px;
+  fill: currentColor; /* O ícone terá a mesma cor do texto */
+  transition: fill 0.2s ease-in-out; /* Anima a cor do ícone */
+}
+
+.backButton:hover {
+  color: #fff;
+  border-color: #ffd700; /* Borda dourada */
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.7); /* Brilho dourado */
+  
+  /* Efeito de "levantar" o botão */
+  transform: translateY(-3px) scale(1.05); 
 }
