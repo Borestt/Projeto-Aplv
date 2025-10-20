@@ -1,0 +1,115 @@
+/* Styles para Settings */
+.settings-container {
+  padding: 24px;
+  color: #222;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.settings-container.centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.backButton {
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.settings-title {
+  margin: 8px 0 18px 0;
+}
+
+.card {
+  width: 420px;
+  max-width: 92vw;
+  background: linear-gradient(180deg, #341f04, #292309);
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  padding: 18px;
+  box-sizing: border-box;
+}
+
+.scheme-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.scheme-label { font-weight: 600; }
+
+.scheme-options { display: flex; gap: 8px; }
+.scheme-btn {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #e6e6e6;
+  background: #fff;
+  cursor: pointer;
+}
+.scheme-btn.active {
+  background: #ff6f00;
+  color: #fff;
+  border-color: #ff6f00;
+}
+
+.helper { margin: 12px 0; color: #555 }
+
+.preview {
+  margin: 8px auto 12px auto;
+  position: relative;
+  background: linear-gradient(180deg,#f7f7f7,#ffffff);
+  border-radius: 8px;
+  border: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-player {
+  position: absolute;
+  background: #ff6f00;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(255,111,0,0.18);
+  transition: transform 0.08s linear, left 0.06s linear, top 0.06s linear;
+}
+
+.key-indicators {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  display: grid;
+  grid-template-columns: repeat(2, 34px);
+  gap: 6px;
+}
+
+.key {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.04);
+  border-radius: 6px;
+  font-weight: 700;
+  color: #333;
+  transition: transform 0.08s ease, background 0.12s ease, box-shadow 0.12s ease;
+}
+.key.on {
+  background: #ff6f00;
+  color: #fff;
+  transform: scale(1.06);
+  box-shadow: 0 6px 18px rgba(255,111,0,0.22);
+}
+
+@media (max-width: 480px) {
+  .card { width: 92vw; padding: 14px }
+  .key-indicators { right: 6px; bottom: 6px }
+}
