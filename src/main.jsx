@@ -5,6 +5,7 @@ import Home from './containers/Home';
 import Create from './containers/Create';
 import Settings from './containers/Settings';
 import Infos from './containers/Infos';
+import Game from './containers/Game';
 import './index.css';
 
 // A rota PRECISA estar definida aqui
@@ -27,7 +28,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/game",
-    element: <div>Game Screen (em construção)</div>,
+    element: <Game />,
   }
 ]);
 

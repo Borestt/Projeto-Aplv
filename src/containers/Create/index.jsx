@@ -125,6 +125,7 @@ function CreateCharacterScreen() {
 
         <div className="stats-card">
           <h2>Ficha do Personagem</h2>
+          <p className='nomeHero'>Nome</p>
           <p>❤️ <strong>HP:</strong> <span className='hp'>{stats.hp}</span></p>
           <p>⚔️ <strong>ATK:</strong> <span className='atk'>{stats.atk}</span></p>
           <p>🛡️ <strong>DEF:</strong> <span className='def'>{stats.def}</span></p>
