@@ -1,0 +1,260 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+@keyframes damage {
+    0% { transform: translate(0); }
+    25% { transform: translate(-5px, 5px); }
+    50% { transform: translate(5px, -5px); }
+    75% { transform: translate(-5px, -5px); }
+    100% { transform: translate(0); }
+}
+
+@keyframes fade {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+
+.game-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.backButton {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+    transition: transform 0.2s ease;
+}
+
+.backButton:hover {
+    transform: scale(1.1);
+}
+
+.backButton svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* --- Estrutura Principal da Tela --- */
+.battle-screen {
+    font-family: 'Press Start 2P', 'Consolas', 'Courier New', monospace;
+    background-color: #000;
+    color: white;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    image-rendering: pixelated;
+}
+
+/* --- O visual clássico da "Janela" FF --- */
+.battle-window {
+    background: linear-gradient(to bottom, #003366, #001133);
+    border: 4px solid #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0 0 0 4px #333;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+/* --- Área dos Inimigos (Topo) --- */
+.enemy-area {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    padding: 20px;
+}
+
+.enemy-sprite {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    background-color: #600;
+    border: 3px solid #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    cursor: default;
+    padding: 10px;
+}
+
+.enemy-sprite.targetable {
+    cursor: pointer;
+    border-color: #ffff00;
+    transform: scale(1.1);
+}
+
+.enemy-sprite.targetable:hover {
+    border-color: #ff0;
+    box-shadow: 0 0 20px rgba(255, 255, 0, 0.5);
+}
+
+.enemy-sprite.damage-animation {
+    animation: damage 0.3s ease-in-out;
+}
+
+.enemy-name {
+    position: absolute;
+    top: -25px;
+    font-size: 12px;
+    text-shadow: 2px 2px 2px #000;
+}
+
+.enemy-hp {
+    position: absolute;
+    bottom: -25px;
+    font-size: 12px;
+    color: #8f8;
+}
+
+/* --- UI do Jogador (Baixo) --- */
+.player-ui-container {
+    height: 280px;
+    border-top: 4px solid #555;
+    display: flex;
+    position: relative;
+    padding: 20px;
+}
+
+/* --- Janela de Status (Direita) --- */
+.party-status-window {
+    width: 65%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 15px;
+    position: relative;
+}
+
+.status-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+    position: relative;
+}
+
+.status-box.damage-animation {
+    animation: damage 0.3s ease-in-out;
+}
+
+.status-box.active::before {
+    content: '►';
+    position: absolute;
+    left: -20px;
+    color: #ff0;
+    font-size: 12px;
+    animation: fade 1s infinite;
+}
+
+.status-box.active {
+    background-color: rgba(255, 255, 0, 0.2);
+}
+
+.status-box .name {
+    font-weight: bold;
+    width: 100px;
+}
+
+.status-box .hp {
+    color: #8f8;
+    width: 180px;
+    transition: all 0.3s ease;
+}
+
+/* Menus de Combate */
+.command-menu, .magic-menu, .victory-defeat-menu {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    min-width: 200px;
+}
+
+.command-menu ul, .magic-menu ul, .victory-defeat-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.command-menu li, .magic-menu li, .victory-defeat-menu li {
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    padding-left: 24px;
+}
+
+.command-menu li:hover, .magic-menu li:hover, .victory-defeat-menu li:hover {
+    color: #ff0;
+    transform: scale(1.05);
+}
+
+.command-menu li::before, .magic-menu li::before, .victory-defeat-menu li::before {
+    content: '►';
+    position: absolute;
+    left: 5px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.command-menu li:hover::before, .magic-menu li:hover::before, .victory-defeat-menu li:hover::before {
+    opacity: 1;
+}
+
+/* Janela de Mensagem */
+.message-window {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    min-width: 60%;
+    padding: 15px;
+}
+
+.message-window p {
+    margin: 0;
+    line-height: 1.4;
+    font-size: 14px;
+}
+
+/* Animações de Vitória/Derrota */
+.victory .enemy-sprite {
+    animation: fade 1s infinite;
+    opacity: 0;
+}
+
+.defeat .player-ui-container {
+    filter: grayscale(100%);
+}
+
+/* Player Avatar */
+.player-avatar {
+    width: 48px;
+    height: 48px;
+    border: 2px solid #fff;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+/* Status Box Stats */
+.stats {
+    display: flex;
+    gap: 10px;
+    font-size: 12px;
+    color: #aaf;
+}

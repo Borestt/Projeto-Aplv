@@ -142,7 +142,10 @@ function CreateCharacterScreen() {
         </div>
       </div>
 
-      <Link to="/game">
+      <Link to="/game" onClick={() => {
+        localStorage.setItem('playerStats', JSON.stringify(stats));
+        localStorage.setItem('playerAvatar', `https://api.dicebear.com/7.x/pixel-art/svg?seed=${avatarEscolhido}`);
+      }}>
         <button className='startGame'>COMEÇAR AVENTURA!</button>
       </Link>
       <footer>
