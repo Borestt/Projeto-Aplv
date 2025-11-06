@@ -5,6 +5,7 @@ import Home from './containers/Home';
 import Create from './containers/Create';
 import Settings from './containers/Settings';
 import Infos from './containers/Infos';
+import { AudioProvider } from './contexts/AudioContext';
 import './index.css';
 
 // A rota PRECISA estar definida aqui
@@ -34,6 +35,8 @@ const router = createBrowserRouter([
 // O RouterProvider PRECISA estar sendo renderizado
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AudioProvider>
+      <RouterProvider router={router} />
+    </AudioProvider>
   </React.StrictMode>,
 );

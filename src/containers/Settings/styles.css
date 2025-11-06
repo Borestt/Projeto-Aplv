@@ -1,0 +1,83 @@
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  font-family: 'Press Start 2P', cursive;
+}
+
+.settings-title {
+  color: #fff;
+  text-shadow: 2px 2px 0px #000;
+  margin-bottom: 2rem;
+  font-size: 24px;
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: #000;
+  border: 3px solid #fff;
+  box-shadow: 4px 4px 0px #666;
+}
+
+.volume-icon {
+  color: #fff;
+  font-size: 24px;
+  min-width: 30px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.play-button {
+  background: none;
+  border: 2px solid #fff;
+  color: #fff;
+  font-size: 24px;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-right: 10px;
+  box-shadow: 2px 2px 0px #666;
+}
+
+.play-button:hover {
+  background: #333;
+}
+
+.volume-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 200px;
+  height: 20px;
+  background: #444;
+  border: 2px solid #fff;
+  cursor: pointer;
+  margin: 0 10px;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 30px;
+  background: #fff;
+  border: 2px solid #000;
+  cursor: pointer;
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 20px;
+  height: 30px;
+  background: #fff;
+  border: 2px solid #000;
+  cursor: pointer;
+}
+
+.volume-value {
+  color: #fff;
+  font-size: 16px;
+  min-width: 60px;
+  text-align: center;
+}
