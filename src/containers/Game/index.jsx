@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import "./styles.css";
 
 const ENEMIES = [
-    { id: 'e1', name: 'Goblin Ladrão', hp: 80, maxHp: 80, atk: 15, def: 8, description: 'Um goblin ágil e sorrateiro' },
+    { id: 'e1', name: 'Goblin Ladrão', hp: 80, maxHp: 80, atk: 22, def: 8, description: 'Um goblin ágil e sorrateiro' },
     { id: 'e2', name: 'Esqueleto Guerreiro', hp: 100, maxHp: 100, atk: 20, def: 12, description: 'Um esqueleto reanimado com sua antiga armadura' },
-    { id: 'e3', name: 'Slime Gigante', hp: 150, maxHp: 150, atk: 12, def: 15, description: 'Uma massa gelatinosa de tamanho impressionante' },
+    { id: 'e3', name: 'Slime Gigante', hp: 150, maxHp: 150, atk: 20, def: 15, description: 'Uma massa gelatinosa de tamanho impressionante' },
     { id: 'e4', name: 'Mago Corrompido', hp: 70, maxHp: 70, atk: 25, def: 5, description: 'Um mago que sucumbiu às forças das trevas' },
     { id: 'e5', name: 'Dragão Jovem', hp: 200, maxHp: 200, atk: 30, def: 20, description: 'Um dragão ainda jovem, mas já muito perigoso' },
-    { id: 'e6', name: 'Aranha Gigante', hp: 90, maxHp: 90, atk: 18, def: 10, description: 'Uma aranha venenosa de proporções assustadoras' },
+    { id: 'e6', name: 'Aranha Gigante', hp: 90, maxHp: 90, atk: 25, def: 10, description: 'Uma aranha venenosa de proporções assustadoras' },
     { id: 'e7', name: 'Elemental de Fogo', hp: 110, maxHp: 110, atk: 28, def: 8, description: 'Uma criatura feita de chamas vivas' },
     { id: 'e8', name: 'Troll das Cavernas', hp: 180, maxHp: 180, atk: 22, def: 18, description: 'Um troll brutal que vive nas profundezas' }
 ];
@@ -38,7 +38,8 @@ const BattleUI = () => {
     }));
     const [playerState, setPlayerState] = useState(() => ({
         ...getPlayerStats(),
-        isAnimating: false
+        isAnimating: false,
+        tempDef: 0
     }));
     const [turnState, setTurnState] = useState('PLAYER');
     const [actionLocked, setActionLocked] = useState(false); // evita ações repetidas por clique rápido
@@ -98,7 +99,8 @@ const BattleUI = () => {
         setMessage(`${currentEnemy.name} se prepara para atacar!`);
 
         setTimeout(() => {
-            const damage = Math.max(0, currentEnemy.atk - playerState.def);
+            const effectiveDef = (playerState.def || 0) + (playerState.tempDef || 0);
+            const damage = Math.max(0, currentEnemy.atk - effectiveDef);
             const finalDamage = Math.floor(damage * (1 + Math.random() * 0.3));
 
             applyDamage('player', finalDamage);
@@ -110,6 +112,10 @@ const BattleUI = () => {
                     setMenuState('MAIN');
                     setMessage('Seu turno! Escolha uma ação...');
                 }
+                // limpa buff de defesa temporário após o turno inimigo
+                if (playerState.tempDef && playerState.tempDef > 0) {
+                    setPlayerState(prev => ({ ...prev, tempDef: 0 }));
+                }
                 setActionLocked(false);
             }, 1500);
         }, 1000);
@@ -120,13 +126,26 @@ const BattleUI = () => {
             ...ENEMIES[Math.floor(Math.random() * ENEMIES.length)],
             isAnimating: false
         });
-        setPlayerState({
-            ...getPlayerStats(),
-            isAnimating: false
-        });
+        // não resetar HP/poções do jogador ao iniciar nova batalha — preserva uso de poções
+        setPlayerState(prev => ({ ...prev, isAnimating: false, tempDef: 0 }));
+        // garantir que o processamento de drop seja reiniciado para a nova batalha
+        dropProcessedRef.current = false;
         setMenuState('MAIN');
         setTurnState('PLAYER');
         setMessage('Um novo inimigo aparece! Prepare-se para a batalha!');
+    };
+
+    const handleDefend = () => {
+        if (turnState !== 'PLAYER' || actionLocked) return;
+        setActionLocked(true);
+        // aplica um buff temporário de defesa (50% da defesa base, arredondado para cima)
+        setPlayerState(prev => ({ ...prev, tempDef: Math.ceil((prev.def || 0) * 0.5) }));
+        setMessage(`${playerState.name} se protege — DEF aumentada por 1 turno!`);
+
+        // inimigo ataca após pequena pausa
+        setTimeout(() => {
+            handleEnemyTurn();
+        }, 700);
     };
 
     const handleAttack = () => {
@@ -172,8 +191,9 @@ const BattleUI = () => {
         setPlayerState(prev => ({ ...prev, hp: Math.min(prev.maxHp, prev.hp + heal), potions: (prev.potions || 0) - 1 }));
         setMessage(`${playerState.name} usa uma Poção de Vida e recupera até ${heal} HP!`);
 
-        // após usar, inimigo tem seu turno
         setTimeout(() => {
+            // garante que o menu volta para MAIN após a cura e o turno do inimigo
+            setMenuState('MAIN');
             handleEnemyTurn();
         }, 900);
     };
@@ -183,7 +203,7 @@ const BattleUI = () => {
             <ul>
                 <li onClick={handleAttack}>Attack</li>
                 <li onClick={handleOpenItemMenu}>Item</li>
-                <li>Defend</li>
+                <li onClick={handleDefend}>Defend</li>
             </ul>
         </div>
     );
@@ -203,7 +223,8 @@ const BattleUI = () => {
     const renderVictoryDefeatMenu = () => (
         <div className="battle-window victory-defeat-menu">
             <ul>
-                <li onClick={handleNewBattle}>Continuar</li>
+                {/* Só mostra "Continuar" se for vitória */}
+                {menuState === 'VICTORY' && <li onClick={handleNewBattle}>Continuar</li>}
                 <li onClick={() => window.location.href = '/'}>Voltar ao Menu</li>
             </ul>
         </div>
@@ -228,10 +249,10 @@ const BattleUI = () => {
                         <img src={playerState.avatar || 'https://via.placeholder.com/48x48.png?text=Hero'} alt="Player Avatar" className="player-avatar" />
                         <span className="name">{playerState.name}</span>
                         <span className="hp">HP: {playerState.hp} / {playerState.maxHp}</span>
-                        <div className="stats">
-                            <span>ATK: {playerState.atk}</span>
-                            <span>DEF: {playerState.def}</span>
-                        </div>
+                                <div className="stats">
+                                    <span>ATK: {playerState.atk}</span>
+                                    <span>DEF: {playerState.def + (playerState.tempDef || 0)}{playerState.tempDef ? ` (+${playerState.tempDef})` : ''}</span>
+                                </div>
                     </div>
                 </div>
 

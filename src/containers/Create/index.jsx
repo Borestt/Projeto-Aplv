@@ -44,17 +44,17 @@ function CreateCharacterScreen() {
       case 'guerreiro':
         minHp = 100; maxHp = 180;
         minAtk = 30; maxAtk = 50;
-        minDef = 15; maxDef = 25;
+        minDef = 5; maxDef = 10;
         break;
       case 'mago':
         minHp = 40; maxHp = 80;
         minAtk = 50; maxAtk = 80;
-        minDef = 5; maxDef = 12;
+        minDef = 2; maxDef = 8;
         break;
       case 'guardiao':
         minHp = 60; maxHp = 100;
-        minAtk = 15; maxAtk = 30;
-        minDef = 50; maxDef = 80;
+        minAtk = 15; maxAtk = 30; 
+        minDef = 10; maxDef = 20;
         break;
       default:
         return;
