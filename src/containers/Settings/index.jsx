@@ -6,9 +6,40 @@ function Settings() {
   const { volume, setVolume, isPlaying, togglePlay } = useAudio();
 
   const handleVolumeChange = (event) => {
-    const newVolume = parseInt(event.target.value);
+    const newVolume = parseInt(event.target.value, 10);
     setVolume(newVolume);
   };
+
+  const toggleMute = () => {
+    setVolume(volume === 0 ? 50 : 0);
+  };
+
+  const PlayIcon = (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <path d="M5 3v18l15-9L5 3z" fill="#ffd166" stroke="#7a4b00" strokeWidth="0.5"/>
+    </svg>
+  );
+
+  const PauseIcon = (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <rect x="4" y="3" width="5" height="18" fill="#ffd166" stroke="#7a4b00" strokeWidth="0.5"/>
+      <rect x="15" y="3" width="5" height="18" fill="#ffd166" stroke="#7a4b00" strokeWidth="0.5"/>
+    </svg>
+  );
+
+  const SpeakerOn = (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <path d="M3 10v4h4l5 4V6L7 10H3z" fill="#fff" stroke="#7a4b00" strokeWidth="0.5"/>
+      <path d="M16.5 8.5c1.5 1.5 1.5 5 0 6.5" stroke="#ffd166" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+    </svg>
+  );
+
+  const SpeakerOff = (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <path d="M3 10v4h4l5 4V6L7 10H3z" fill="#666" stroke="#222" strokeWidth="0.5"/>
+      <line x1="16" y1="8" x2="22" y2="14" stroke="#cc0000" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  );
 
   return (
     <div className="settings-container">
@@ -31,14 +62,18 @@ function Settings() {
           </svg>
         </p>
       </Link>
+
       <h1 className="settings-title">Configurações</h1>
-      <div className="volume-control">
-        <button onClick={togglePlay} className="play-button">
-          {isPlaying ? '⏸️' : '▶️'}
+
+      <div className="volume-control rpg-frame">
+        <button onClick={togglePlay} className="rpg-button play-button" aria-pressed={isPlaying} title={isPlaying ? 'Pausar' : 'Tocar'}>
+          {isPlaying ? PauseIcon : PlayIcon}
         </button>
-        <span className="volume-icon" onClick={() => setVolume(volume === 0 ? 50 : 0)}>
-          {volume > 0 ? '🔊' : '🔇'}
-        </span>
+
+        <button className="volume-toggle" onClick={toggleMute} aria-pressed={volume === 0} title={volume === 0 ? 'Desmutar' : 'Mutar'}>
+          {volume > 0 ? SpeakerOn : SpeakerOff}
+        </button>
+
         <input
           type="range"
           min="0"
@@ -46,7 +81,9 @@ function Settings() {
           value={volume}
           onChange={handleVolumeChange}
           className="volume-slider"
+          aria-label="Volume"
         />
+
         <span className="volume-value">{volume}%</span>
       </div>
     </div>

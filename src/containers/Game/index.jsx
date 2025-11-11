@@ -30,7 +30,7 @@ const getPlayerStats = () => {
 
 const BattleUI = () => {
     const [menuState, setMenuState] = useState('MAIN');
-    // const [activeHeroId] = useState('h1'); // não usado hoje
+    // const [activeHeroId] = useState('h1'); // deixei isso comentado por enquanto
     const [message, setMessage] = useState('Seu turno! Escolha uma ação...');
     const [currentEnemy, setCurrentEnemy] = useState(() => ({
         ...ENEMIES[Math.floor(Math.random() * ENEMIES.length)],
@@ -42,14 +42,27 @@ const BattleUI = () => {
         tempDef: 0
     }));
     const [turnState, setTurnState] = useState('PLAYER');
-    const [actionLocked, setActionLocked] = useState(false); // evita ações repetidas por clique rápido
+    const [actionLocked, setActionLocked] = useState(false); // evita spam de clique
     const dropProcessedRef = useRef(false);
+    const [battleLog, setBattleLog] = useState([]);
+    const logRef = useRef(null);
 
     useEffect(() => {
-        // quando inimigo morre -> vitória + chance de drop
+    // joga cada mensagem no log da batalha (só visual)
+        if (message) {
+            const time = new Date().toLocaleTimeString();
+            setBattleLog(prev => [...prev, `${time} — ${message}`]);
+        }
+
+    // rola o log pra baixo automaticamente
+        if (logRef.current) {
+            logRef.current.scrollTop = logRef.current.scrollHeight;
+        }
+
+    // se o inimigo morrer: vitória e chance de drop
         if (currentEnemy.hp <= 0 && !dropProcessedRef.current) {
             dropProcessedRef.current = true;
-            // 50% de chance de dropar poção
+            // ~50% de chance de dropar uma poção
             const dropped = Math.random() < 0.5;
             if (dropped) {
                 setPlayerState(prev => ({ ...prev, potions: (prev.potions || 0) + 1 }));
@@ -68,6 +81,9 @@ const BattleUI = () => {
             setActionLocked(false);
         }
     }, [currentEnemy.hp, playerState.hp]);
+
+    // função pra limpar o log (só visual)
+    const clearLog = () => setBattleLog([]);
 
     const applyDamage = (target, damage) => {
         if (target === 'enemy') {
@@ -92,7 +108,7 @@ const BattleUI = () => {
     };
 
     const handleEnemyTurn = () => {
-        // bloqueia ações durante o turno inimigo
+    // tranca ações enquanto o inimigo faz a dele
         setActionLocked(true);
         setTurnState('ENEMY');
         setMenuState('ENEMY_TURN');
@@ -112,7 +128,7 @@ const BattleUI = () => {
                     setMenuState('MAIN');
                     setMessage('Seu turno! Escolha uma ação...');
                 }
-                // limpa buff de defesa temporário após o turno inimigo
+                // limpa o buff de defesa temporário depois do turno inimigo
                 if (playerState.tempDef && playerState.tempDef > 0) {
                     setPlayerState(prev => ({ ...prev, tempDef: 0 }));
                 }
@@ -126,9 +142,9 @@ const BattleUI = () => {
             ...ENEMIES[Math.floor(Math.random() * ENEMIES.length)],
             isAnimating: false
         });
-        // não resetar HP/poções do jogador ao iniciar nova batalha — preserva uso de poções
+    // não resetar HP/poções ao começar nova luta — mantém o progresso do jogador
         setPlayerState(prev => ({ ...prev, isAnimating: false, tempDef: 0 }));
-        // garantir que o processamento de drop seja reiniciado para a nova batalha
+    // resetar flag de drop pro próximo confronto
         dropProcessedRef.current = false;
         setMenuState('MAIN');
         setTurnState('PLAYER');
@@ -157,7 +173,7 @@ const BattleUI = () => {
     const handleSelectEnemyTarget = () => {
         if (turnState !== 'PLAYER' || actionLocked) return;
 
-        // tranca ação para evitar múltiplos cliques
+    // trava a ação pra evitar cliques duplos
         setActionLocked(true);
         setTurnState('ENEMY');
 
@@ -172,7 +188,7 @@ const BattleUI = () => {
             if (currentEnemy.hp - finalDamage > 0) {
                 handleEnemyTurn();
             } else {
-                // inimigo morreu; allow victory handling in useEffect to run
+                // se o bicho morreu, deixamos o useEffect cuidar da vitória
                 setActionLocked(false);
             }
         }, 1500);
@@ -185,14 +201,14 @@ const BattleUI = () => {
 
     const handleUsePotion = () => {
         if (actionLocked || turnState !== 'PLAYER' || (playerState.potions || 0) <= 0) return;
-        // consome poção e cura
+    // usa a poção e cura o player
         setActionLocked(true);
         const heal = 50;
         setPlayerState(prev => ({ ...prev, hp: Math.min(prev.maxHp, prev.hp + heal), potions: (prev.potions || 0) - 1 }));
         setMessage(`${playerState.name} usa uma Poção de Vida e recupera até ${heal} HP!`);
 
         setTimeout(() => {
-            // garante que o menu volta para MAIN após a cura e o turno do inimigo
+            // volta pro menu e chama o turno do inimigo depois da cura
             setMenuState('MAIN');
             handleEnemyTurn();
         }, 900);
@@ -201,9 +217,9 @@ const BattleUI = () => {
     const renderMainMenu = () => (
         <div className="battle-window command-menu">
             <ul>
-                <li onClick={handleAttack}>Attack</li>
-                <li onClick={handleOpenItemMenu}>Item</li>
-                <li onClick={handleDefend}>Defend</li>
+                <li onClick={handleAttack} role="button" tabIndex={0}>Atacar</li>
+                <li onClick={handleOpenItemMenu} role="button" tabIndex={0}>Itens</li>
+                <li onClick={handleDefend} role="button" tabIndex={0}>Defender</li>
             </ul>
         </div>
     );
@@ -212,10 +228,10 @@ const BattleUI = () => {
         <div className="battle-window magic-menu">
             <ul>
                 <li>Poções: {playerState.potions || 0}</li>
-                <li onClick={handleUsePotion} style={{ opacity: (playerState.potions || 0) > 0 ? 1 : 0.5 }}>
+                <li onClick={handleUsePotion} style={{ opacity: (playerState.potions || 0) > 0 ? 1 : 0.5 }} role="button" tabIndex={0}>
                     Usar Poção
                 </li>
-                <li onClick={() => setMenuState('MAIN')}>Back</li>
+                <li onClick={() => setMenuState('MAIN')} role="button" tabIndex={0}>Voltar</li>
             </ul>
         </div>
     );
@@ -223,7 +239,7 @@ const BattleUI = () => {
     const renderVictoryDefeatMenu = () => (
         <div className="battle-window victory-defeat-menu">
             <ul>
-                {/* Só mostra "Continuar" se for vitória */}
+                {/* só mostra "Continuar" se for vitória */}
                 {menuState === 'VICTORY' && <li onClick={handleNewBattle}>Continuar</li>}
                 <li onClick={() => window.location.href = '/'}>Voltar ao Menu</li>
             </ul>
@@ -239,6 +255,15 @@ const BattleUI = () => {
                 >
                     <div className="enemy-name">{currentEnemy.name}</div>
                     <img src="https://via.placeholder.com/128x128.png?text=Enemy" alt={currentEnemy.name} />
+
+                    {/* barra de HP (só visual) */}
+                    <div className="hp-bar enemy-hp-bar" aria-hidden>
+                        <div
+                            className="hp-fill"
+                            style={{ width: `${Math.max(0, Math.floor((currentEnemy.hp / currentEnemy.maxHp) * 100))}%` }}
+                        />
+                    </div>
+
                     <div className="enemy-hp">HP: {currentEnemy.hp} / {currentEnemy.maxHp}</div>
                 </div>
             </div>
@@ -249,6 +274,15 @@ const BattleUI = () => {
                         <img src={playerState.avatar || 'https://via.placeholder.com/48x48.png?text=Hero'} alt="Player Avatar" className="player-avatar" />
                         <span className="name">{playerState.name}</span>
                         <span className="hp">HP: {playerState.hp} / {playerState.maxHp}</span>
+
+                        {/* barra de HP do jogador (só visual) */}
+                        <div className="hp-bar player-hp-bar" aria-hidden>
+                            <div
+                                className="hp-fill"
+                                style={{ width: `${Math.max(0, Math.floor((playerState.hp / playerState.maxHp) * 100))}%` }}
+                            />
+                        </div>
+
                                 <div className="stats">
                                     <span>ATK: {playerState.atk}</span>
                                     <span>DEF: {playerState.def + (playerState.tempDef || 0)}{playerState.tempDef ? ` (+${playerState.tempDef})` : ''}</span>
@@ -258,6 +292,21 @@ const BattleUI = () => {
 
                 <div className="battle-window message-window">
                     <p>{message}</p>
+                </div>
+
+                <div className="battle-window battle-log-window">
+                    <div className="battle-log" ref={logRef} aria-live="polite">
+                        {battleLog.length === 0 ? (
+                            <div className="log-empty">Nenhum evento registrado ainda.</div>
+                        ) : (
+                            battleLog.map((line, idx) => (
+                                <div className="log-line" key={idx}>{line}</div>
+                            ))
+                        )}
+                    </div>
+                    <div className="log-controls">
+                        <button onClick={clearLog} className="log-clear">Limpar</button>
+                    </div>
                 </div>
 
                 <div className="menu-container">
@@ -270,7 +319,7 @@ const BattleUI = () => {
     );
 };
 
-const Game = () => { // necessário para quando derrotar um monstro, caso clique em voltar ao menu é aqui que volta
+const Game = () => { // wrapper simples pro caso de voltar ao menu depois de derrotar um monstro
     return (
         <div className="game-container">
             <Link to="/">
