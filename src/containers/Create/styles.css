@@ -7,44 +7,35 @@
     padding: 20px;
 }
 
-/* Container das opções de avatar */
 .avatar-options {
     margin: 20px 0;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    /* Garante que os avatares quebrem a linha em telas pequenas */
     gap: 10px;
-    /* Espaçamento entre os avatares */
 }
 
-/* Estilo para cada imagem de avatar nas opções */
 .avatar-image {
     cursor: pointer;
     border: 3px solid transparent;
     border-radius: 8px;
-    /* Bordas levemente arredondadas */
     transition: border-color 0.2s ease-in-out;
 }
 
 .avatar-image:hover {
     border-color: #f0f0f0;
-    /* Um feedback visual ao passar o mouse */
 }
 
-/* Estilo para o avatar que foi escolhido */
 .chosen-avatar {
     border: 3px solid gold;
     border-radius: 10px;
     margin-top: 15px;
 }
 
-/* Container dos atributos do personagem */
 .character-attributes {
     margin-top: 20px;
 }
 
-/* Card com os status (HP, ATK, DEF) */
 .stats-card {
     background: rgba(0, 0, 0, 0.7);
     border-radius: 12px;
@@ -59,7 +50,6 @@
     margin-top: 0;
 }
 
-/* Botão para rolar os atributos */
 .roll-button {
     margin-top: 15px;
     width: 100%;
@@ -70,7 +60,6 @@
     border: none;
     border-radius: 5px;
     background-color: #2c8b30;
-    /* Verde mais vibrante */
     color: white;
     transition: background-color 0.3s;
 }
@@ -79,14 +68,12 @@
     background-color: #3ca942;
 }
 
-/* Estilo do botão quando desabilitado */
 .roll-button:disabled {
     cursor: not-allowed;
     background-color: #555;
     color: #aaa;
 }
 
-/* Parágrafo que mostra as rolagens restantes */
 .rolls-remaining {
     margin-top: 10px;
     font-size: 1.1em;
@@ -162,18 +149,13 @@ label {
 
 .startGame:hover {
     background-color: #ff8f00;
-    /* Laranja um pouco mais claro no hover */
     border-color: #ffff00;
-    /* Borda amarela mais viva no hover */
     box-shadow: 0 4px 0 0 #cc5700;
-    /* A sombra diminui, dando a impressão de "clique" */
     transform: translateY(4px);
 }
 
 .startGame:active {
     background-color: #e66100;
-    /* Laranja mais escuro ao clicar */
     box-shadow: 0 2px 0 0 #cc5700;
-    /* Sombra quase some */
     transform: translateY(6px);
 }

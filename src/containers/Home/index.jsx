@@ -21,7 +21,7 @@ function MainMenu() {
       </div>
 
       <footer>
-        <p>version 0.0.05</p>
+        <p>version 1.39b</p>
       </footer>
     </div>
   );

@@ -38,15 +38,9 @@ function Infos() {
         </p>
 
         <p>
-          Suba de nível, conquiste moedas e equipamentos enquanto avança. Cada
-          missão e cada combate moldam sua trajetória e tornam seu herói mais
-          poderoso.
+          Conquiste e avançe. Cada missão e cada combate moldam sua trajetória e tornam seu herói mais  poderoso.
         </p>
-
-        <p>
-          Participe de eventos, descubra segredos escondidos e ganhe recompensas
-          raras. Seu destino está em suas mãos.
-        </p>
+        
         <section className="infos-extra">
           <h2>Fase Beta</h2>
           <p>o Jogo está em fase Beta, então pode apresentar problemas ou vim upgrades melhores.</p>

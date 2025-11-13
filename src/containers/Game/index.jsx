@@ -3,17 +3,17 @@ import { Link } from 'react-router-dom';
 import "./styles.css";
 
 const ENEMIES = [
-    { id: 'e1', name: 'Goblin Ladrão', hp: 80, maxHp: 80, atk: 22, def: 8, description: 'Um goblin ágil e sorrateiro' },
-    { id: 'e2', name: 'Esqueleto Guerreiro', hp: 100, maxHp: 100, atk: 20, def: 12, description: 'Um esqueleto reanimado com sua antiga armadura' },
-    { id: 'e3', name: 'Slime Gigante', hp: 150, maxHp: 150, atk: 20, def: 15, description: 'Uma massa gelatinosa de tamanho impressionante' },
-    { id: 'e4', name: 'Mago Corrompido', hp: 70, maxHp: 70, atk: 25, def: 5, description: 'Um mago que sucumbiu às forças das trevas' },
-    { id: 'e5', name: 'Dragão Jovem', hp: 200, maxHp: 200, atk: 30, def: 20, description: 'Um dragão ainda jovem, mas já muito perigoso' },
-    { id: 'e6', name: 'Aranha Gigante', hp: 90, maxHp: 90, atk: 25, def: 10, description: 'Uma aranha venenosa de proporções assustadoras' },
-    { id: 'e7', name: 'Elemental de Fogo', hp: 110, maxHp: 110, atk: 28, def: 8, description: 'Uma criatura feita de chamas vivas' },
-    { id: 'e8', name: 'Troll das Cavernas', hp: 180, maxHp: 180, atk: 22, def: 18, description: 'Um troll brutal que vive nas profundezas' }
+    { id: 'e1', name: 'Goblin Ladrão', hp: 80, maxHp: 80, atk: 22, def: 8},
+    { id: 'e2', name: 'Esqueleto Guerreiro', hp: 100, maxHp: 100, atk: 20, def: 12},
+    { id: 'e3', name: 'Slime Gigante', hp: 150, maxHp: 150, atk: 20, def: 15},
+    { id: 'e4', name: 'Mago Corrompido', hp: 70, maxHp: 70, atk: 25, def: 5},
+    { id: 'e5', name: 'Dragão Jovem', hp: 200, maxHp: 200, atk: 30, def: 20},
+    { id: 'e6', name: 'Aranha Gigante', hp: 90, maxHp: 90, atk: 25, def: 10},
+    { id: 'e7', name: 'Elemental de Fogo', hp: 110, maxHp: 110, atk: 28, def: 8},
+    { id: 'e8', name: 'Troll das Cavernas', hp: 180, maxHp: 180, atk: 22, def: 18}
 ];
 
-const getPlayerStats = () => {
+const getPlayerStats = () => { // recupera stats do localStorage
     const savedStats = localStorage.getItem('playerStats');
     const savedAvatar = localStorage.getItem('playerAvatar');
     return {
@@ -28,9 +28,8 @@ const getPlayerStats = () => {
     };
 };
 
-const BattleUI = () => {
+const BattleUI = () => { 
     const [menuState, setMenuState] = useState('MAIN');
-    // const [activeHeroId] = useState('h1'); // deixei isso comentado por enquanto
     const [message, setMessage] = useState('Seu turno! Escolha uma ação...');
     const [currentEnemy, setCurrentEnemy] = useState(() => ({
         ...ENEMIES[Math.floor(Math.random() * ENEMIES.length)],
@@ -48,21 +47,18 @@ const BattleUI = () => {
     const logRef = useRef(null);
 
     useEffect(() => {
-    // joga cada mensagem no log da batalha (só visual)
         if (message) {
             const time = new Date().toLocaleTimeString();
             setBattleLog(prev => [...prev, `${time} — ${message}`]);
         }
-
     // rola o log pra baixo automaticamente
         if (logRef.current) {
             logRef.current.scrollTop = logRef.current.scrollHeight;
         }
 
-    // se o inimigo morrer: vitória e chance de drop
+    // se o inimigo morrer = chance de drop
         if (currentEnemy.hp <= 0 && !dropProcessedRef.current) {
             dropProcessedRef.current = true;
-            // ~50% de chance de dropar uma poção
             const dropped = Math.random() < 0.5;
             if (dropped) {
                 setPlayerState(prev => ({ ...prev, potions: (prev.potions || 0) + 1 }));
@@ -82,7 +78,6 @@ const BattleUI = () => {
         }
     }, [currentEnemy.hp, playerState.hp]);
 
-    // função pra limpar o log (só visual)
     const clearLog = () => setBattleLog([]);
 
     const applyDamage = (target, damage) => {
@@ -114,15 +109,15 @@ const BattleUI = () => {
         setMenuState('ENEMY_TURN');
         setMessage(`${currentEnemy.name} se prepara para atacar!`);
 
-        setTimeout(() => {
+        setTimeout(() => { 
             const effectiveDef = (playerState.def || 0) + (playerState.tempDef || 0);
             const damage = Math.max(0, currentEnemy.atk - effectiveDef);
-            const finalDamage = Math.floor(damage * (1 + Math.random() * 0.3));
+            const finalDamage = Math.floor(damage * (1 + Math.random() * 0.3)); // dano com variação de até 30%
 
             applyDamage('player', finalDamage);
             setMessage(`${currentEnemy.name} ataca e causa ${finalDamage} de dano!`);
 
-            setTimeout(() => {
+            setTimeout(() => { // volta pro turno do player se ele não morreu
                 if (playerState.hp - finalDamage > 0) {
                     setTurnState('PLAYER');
                     setMenuState('MAIN');
@@ -142,29 +137,26 @@ const BattleUI = () => {
             ...ENEMIES[Math.floor(Math.random() * ENEMIES.length)],
             isAnimating: false
         });
-    // não resetar HP/poções ao começar nova luta — mantém o progresso do jogador
         setPlayerState(prev => ({ ...prev, isAnimating: false, tempDef: 0 }));
-    // resetar flag de drop pro próximo confronto
-        dropProcessedRef.current = false;
+        dropProcessedRef.current = false; // reseta a chance de drop
         setMenuState('MAIN');
         setTurnState('PLAYER');
         setMessage('Um novo inimigo aparece! Prepare-se para a batalha!');
     };
 
-    const handleDefend = () => {
+    const handleDefend = () => { //funão defesa
         if (turnState !== 'PLAYER' || actionLocked) return;
         setActionLocked(true);
         // aplica um buff temporário de defesa (50% da defesa base, arredondado para cima)
         setPlayerState(prev => ({ ...prev, tempDef: Math.ceil((prev.def || 0) * 0.5) }));
         setMessage(`${playerState.name} se protege — DEF aumentada por 1 turno!`);
 
-        // inimigo ataca após pequena pausa
         setTimeout(() => {
             handleEnemyTurn();
         }, 700);
     };
 
-    const handleAttack = () => {
+    const handleAttack = () => { // função ataque
         if (turnState !== 'PLAYER' || actionLocked) return;
         setMenuState('TARGET_ENEMY');
         setMessage('Selecione um alvo...');
@@ -188,13 +180,13 @@ const BattleUI = () => {
             if (currentEnemy.hp - finalDamage > 0) {
                 handleEnemyTurn();
             } else {
-                // se o bicho morreu, deixamos o useEffect cuidar da vitória
+                // se o bicho morreu, deixamos o useEffect agir
                 setActionLocked(false);
             }
         }, 1500);
     };
 
-    const handleOpenItemMenu = () => {
+    const handleOpenItemMenu = () => { // função item
         if (turnState !== 'PLAYER' || actionLocked) return;
         setMenuState('ITEM');
     };
@@ -214,7 +206,7 @@ const BattleUI = () => {
         }, 900);
     };
 
-    const renderMainMenu = () => (
+    const renderMainMenu = () => ( // aba de ações da direita
         <div className="battle-window command-menu">
             <ul>
                 <li onClick={handleAttack} role="button" tabIndex={0}>Atacar</li>
@@ -239,14 +231,14 @@ const BattleUI = () => {
     const renderVictoryDefeatMenu = () => (
         <div className="battle-window victory-defeat-menu">
             <ul>
-                {/* só mostra "Continuar" se for vitória */}
+                {/* só mostra Continuar, se for vitória */}
                 {menuState === 'VICTORY' && <li onClick={handleNewBattle}>Continuar</li>}
                 <li onClick={() => window.location.href = '/'}>Voltar ao Menu</li>
             </ul>
         </div>
     );
 
-    return (
+    return ( // tela de batalha
         <div className={`battle-screen ${menuState === 'VICTORY' ? 'victory' : ''} ${menuState === 'DEFEAT' ? 'defeat' : ''}`}>
             <div className="enemy-area">
                 <div
@@ -256,7 +248,7 @@ const BattleUI = () => {
                     <div className="enemy-name">{currentEnemy.name}</div>
                     <img src="https://via.placeholder.com/128x128.png?text=Enemy" alt={currentEnemy.name} />
 
-                    {/* barra de HP (só visual) */}
+                    {/* barra de HP */}
                     <div className="hp-bar enemy-hp-bar" aria-hidden>
                         <div
                             className="hp-fill"
@@ -275,7 +267,7 @@ const BattleUI = () => {
                         <span className="name">{playerState.name}</span>
                         <span className="hp">HP: {playerState.hp} / {playerState.maxHp}</span>
 
-                        {/* barra de HP do jogador (só visual) */}
+                        {/* barra de HP do jogador*/}
                         <div className="hp-bar player-hp-bar" aria-hidden>
                             <div
                                 className="hp-fill"
@@ -319,7 +311,7 @@ const BattleUI = () => {
     );
 };
 
-const Game = () => { // wrapper simples pro caso de voltar ao menu depois de derrotar um monstro
+const Game = () => { 
     return (
         <div className="game-container">
             <Link to="/">

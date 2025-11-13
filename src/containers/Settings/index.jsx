@@ -22,8 +22,8 @@ function Settings() {
 
   const PauseIcon = (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-      <rect x="4" y="3" width="5" height="18" fill="#ffd166" stroke="#7a4b00" strokeWidth="0.5"/>
-      <rect x="15" y="3" width="5" height="18" fill="#ffd166" stroke="#7a4b00" strokeWidth="0.5"/>
+      <rect x="4" y="3" width="5" height="180" fill="#ffd166" stroke="#7a4b00" strokeWidth="0.5"/>
+      <rect x="15" y="3" width="5" height="180" fill="#ffd166" stroke="#7a4b00" strokeWidth="0.5"/>
     </svg>
   );
 
@@ -63,7 +63,7 @@ function Settings() {
         </p>
       </Link>
 
-      <h1 className="settings-title">Configurações</h1>
+      <h1 className="settings-title">Volume</h1>
 
       <div className="volume-control rpg-frame">
         <button onClick={togglePlay} className="rpg-button play-button" aria-pressed={isPlaying} title={isPlaying ? 'Pausar' : 'Tocar'}>

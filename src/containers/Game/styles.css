@@ -42,15 +42,13 @@
     height: 100%;
 }
 
-/* Tela principal — deixa com cara de jogo */
+
 .battle-screen {
     font-family: 'Press Start 2P', 'Consolas', 'Courier New', monospace;
-    /* papel de fundo — textura de floresta/pintura (handpainted.jpg) */
     background-image: url('/img/handpainted.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
-    /* camada escura para contraste */
     background-blend-mode: multiply;
     background-color: rgba(4,6,10,0.85);
     color: white;
@@ -62,11 +60,9 @@
     image-rendering: pixelated;
 }
 
-/* Janela estilo clássico (tipo FF), versão rústica */
 .battle-window {
-    /* moldura antiga, tom dourado pra sensação RPG */
     background: linear-gradient(to bottom, #081126, #021018);
-    border: 6px solid #b7853b; /* dourado envelhecido */
+    border: 6px solid #b7853b;
     border-radius: 10px;
     box-shadow: 0 6px 0 4px rgba(0,0,0,0.6), inset 0 2px 0 rgba(255,255,255,0.02);
     padding: 12px;
@@ -87,7 +83,7 @@
     width: 140px;
     height: 140px;
     background: linear-gradient(180deg,#4b0b0b 0%, #2a0808 100%);
-    border: 4px solid #8f5a2b; /* moldura de madeira/bronze */
+    border: 4px solid #8f5a2b;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -143,7 +139,6 @@
     padding: 20px;
 }
 
-/* Janela de status (parte direita) */
 .party-status-window {
     width: 65%;
     height: 100%;
@@ -164,7 +159,7 @@
     position: relative;
 }
 
-.status-box { /* leve envelhecimento */
+.status-box {
     background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.05));
     border: 2px solid rgba(255,255,255,0.03);
 }
@@ -199,7 +194,6 @@
 
 .command-menu, .magic-menu, .victory-defeat-menu {
     position: absolute;
-    /* desloca o menu para não sobrepor a janela de logs (log width ~300 + gaps) */
     right: 340px;
     bottom: 20px;
     min-width: 200px;
@@ -225,7 +219,7 @@
     border-radius: 8px;
     box-shadow: 0 4px 0 rgba(0,0,0,0.6);
     padding-left: 26px;
-    color: #ffd; /* tom envelhecido */
+    color: #ffd;
 }
 
 .command-menu li:hover, .magic-menu li:hover, .victory-defeat-menu li:hover {
@@ -235,7 +229,6 @@
 }
 
 .command-menu li::before, .magic-menu li::before, .victory-defeat-menu li::before {
-    content: '✦';
     position: absolute;
     left: 8px;
     opacity: 0.9;
@@ -243,7 +236,6 @@
     text-shadow: 0 1px 0 rgba(0,0,0,0.6);
 }
 
-/* Mensagens (estilo pergaminho) */
 .message-window {
     position: absolute;
     left: 20px;
@@ -253,7 +245,6 @@
 }
 
 .message-window {
-    /* pergaminho / papel */
     background: linear-gradient(180deg,#f6ecd7,#e6d8b0);
     color: #2b1a09;
     border: 3px solid #c9a85b;
@@ -266,7 +257,7 @@
     margin: 0;
     line-height: 1.3;
     font-size: 12px;
-    color: #fff; /* manter legibilidade sobre o fundo escuro interno */
+    color: #fff;
     text-shadow: 0 1px 0 rgba(0,0,0,0.6);
 }
 
@@ -305,7 +296,6 @@
     animation: fade 1s linear infinite;
 }
 
-/* animações de vitória/derrota */
 .victory .enemy-sprite {
     animation: fade 1s infinite;
     opacity: 0;
@@ -315,7 +305,6 @@
     filter: grayscale(100%);
 }
 
-/* avatar do player */
 .player-avatar {
     width: 48px;
     height: 48px;
@@ -324,7 +313,6 @@
     margin-right: 10px;
 }
 
-/* stats do player */
 .stats {
     display: flex;
     gap: 10px;
@@ -332,7 +320,6 @@
     color: #aaf;
 }
 
-/* registro da batalha (log) */
 .battle-log-window {
     position: absolute;
     right: 20px;
@@ -345,12 +332,11 @@
     gap: 8px;
 }
 
-/* responsividade: em telas pequenas empilha o log acima do menu para evitar sobreposição */
 @media (max-width: 800px) {
     .battle-log-window {
         right: 20px;
         top: auto;
-        bottom: 260px; /* coloca acima do menu */
+        bottom: 260px;
         width: calc(100% - 40px);
         left: 20px;
         height: 180px;
