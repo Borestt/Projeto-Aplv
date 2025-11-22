@@ -3,17 +3,113 @@ import { Link } from 'react-router-dom';
 import "./styles.css";
 
 const ENEMIES = [
-    { id: 'e1', name: 'Goblin Ladrão', hp: 80, maxHp: 80, atk: 22, def: 8},
-    { id: 'e2', name: 'Esqueleto Guerreiro', hp: 100, maxHp: 100, atk: 20, def: 12},
-    { id: 'e3', name: 'Slime Gigante', hp: 150, maxHp: 150, atk: 20, def: 15},
-    { id: 'e4', name: 'Mago Corrompido', hp: 70, maxHp: 70, atk: 25, def: 5},
-    { id: 'e5', name: 'Dragão Jovem', hp: 200, maxHp: 200, atk: 30, def: 20},
-    { id: 'e6', name: 'Aranha Gigante', hp: 90, maxHp: 90, atk: 25, def: 10},
-    { id: 'e7', name: 'Elemental de Fogo', hp: 110, maxHp: 110, atk: 28, def: 8},
-    { id: 'e8', name: 'Troll das Cavernas', hp: 180, maxHp: 180, atk: 22, def: 18}
+    { 
+        id: 'e1', 
+        name: 'Goblin Ladrão', 
+        hp: 80, 
+        maxHp: 80, 
+        atk: 22, 
+        def: 8,
+        sprites: {
+            idle: 'Sprits/Goblin.parado.png',
+            attack: 'Sprits/Goblin.ataque.png',
+            damage: 'Sprits/Goblin.dano.png'
+        }
+    },
+    { 
+        id: 'e2', 
+        name: 'Esqueleto Guerreiro', 
+        hp: 100, 
+        maxHp: 100, 
+        atk: 20, 
+        def: 12,
+        sprites: {
+            idle: 'Sprits/Esqueleto.parado.png',
+            attack: 'Sprits/Esqueleto.ataque.png',
+            damage: 'Sprits/Esqueleto.dano.png'
+        }
+    },
+    { 
+        id: 'e3', 
+        name: 'Slime Gigante', 
+        hp: 150, 
+        maxHp: 150, 
+        atk: 20, 
+        def: 15,
+        sprites: {
+            idle: 'Sprits/Slime.parado.png',
+            attack: 'Sprits/Slime.ataque.png',
+            damage: 'Sprits/Slime.dano.png'
+        }
+    },
+    { 
+        id: 'e4', 
+        name: 'Mago Corrompido', 
+        hp: 70, 
+        maxHp: 70, 
+        atk: 25, 
+        def: 5,
+        sprites: {
+            idle: 'Sprits/Mago.parado.png',
+            attack: 'Sprits/Mago.ataque.png',
+            damage: 'Sprits/Mago.dano.png'
+        }
+    },
+    { 
+        id: 'e5', 
+        name: 'Dragão Jovem', 
+        hp: 200, 
+        maxHp: 200, 
+        atk: 30, 
+        def: 20,
+        sprites: {
+            idle: 'Sprits/Dragao.parado.png',
+            attack: 'Sprits/Dragao.ataque.png',
+            damage: 'Sprits/Dragao.dano.png'
+        }
+    },
+    { 
+        id: 'e6', 
+        name: 'Aranha Gigante', 
+        hp: 90, 
+        maxHp: 90, 
+        atk: 25, 
+        def: 10,
+        sprites: {
+            idle: 'Sprits/Aranha.parado.png',
+            attack: 'Sprits/Aranha.ataque.png',
+            damage: 'Sprits/Aranha.dano.png'
+        }
+    },
+    { 
+        id: 'e7', 
+        name: 'Elemental de Fogo', 
+        hp: 110, 
+        maxHp: 110, 
+        atk: 28, 
+        def: 8,
+        sprites: {
+            idle: 'Sprits/Elemental.parado.png',
+            attack: 'Sprits/Elemental.ataque.png',
+            damage: 'Sprits/Elemental.dano.png'
+        }
+    },
+    { 
+        id: 'e8', 
+        name: 'Troll das Cavernas', 
+        hp: 180, 
+        maxHp: 180, 
+        atk: 22, 
+        def: 18,
+        sprites: {
+            idle: 'Sprits/Troll.parado.png',
+            attack: 'Sprits/Troll.ataque.png',
+            damage: 'Sprits/Troll.dano.png'
+        }
+    }
 ];
 
-const getPlayerStats = () => { // recupera stats do localStorage
+const getPlayerStats = () => {
     const savedStats = localStorage.getItem('playerStats');
     const savedAvatar = localStorage.getItem('playerAvatar');
     return {
@@ -33,7 +129,8 @@ const BattleUI = () => {
     const [message, setMessage] = useState('Seu turno! Escolha uma ação...');
     const [currentEnemy, setCurrentEnemy] = useState(() => ({
         ...ENEMIES[Math.floor(Math.random() * ENEMIES.length)],
-        isAnimating: false
+        isAnimating: false,
+        currentSprite: 'idle'
     }));
     const [playerState, setPlayerState] = useState(() => ({
         ...getPlayerStats(),
@@ -41,7 +138,7 @@ const BattleUI = () => {
         tempDef: 0
     }));
     const [turnState, setTurnState] = useState('PLAYER');
-    const [actionLocked, setActionLocked] = useState(false); // evita spam de clique
+    const [actionLocked, setActionLocked] = useState(false);
     const dropProcessedRef = useRef(false);
     const [battleLog, setBattleLog] = useState([]);
     const logRef = useRef(null);
@@ -51,12 +148,10 @@ const BattleUI = () => {
             const time = new Date().toLocaleTimeString();
             setBattleLog(prev => [...prev, `${time} — ${message}`]);
         }
-    // rola o log pra baixo automaticamente
         if (logRef.current) {
             logRef.current.scrollTop = logRef.current.scrollHeight;
         }
 
-    // se o inimigo morrer = chance de drop
         if (currentEnemy.hp <= 0 && !dropProcessedRef.current) {
             dropProcessedRef.current = true;
             const dropped = Math.random() < 0.5;
@@ -76,7 +171,7 @@ const BattleUI = () => {
             setMessage('Game Over! Você foi derrotado...');
             setActionLocked(false);
         }
-    }, [currentEnemy.hp, playerState.hp]);
+    }, [currentEnemy.hp, playerState.hp, message]);
 
     const clearLog = () => setBattleLog([]);
 
@@ -85,10 +180,11 @@ const BattleUI = () => {
             setCurrentEnemy(prev => ({
                 ...prev,
                 isAnimating: true,
+                currentSprite: 'damage',
                 hp: Math.max(0, prev.hp - damage)
             }));
             setTimeout(() => {
-                setCurrentEnemy(prev => ({ ...prev, isAnimating: false }));
+                setCurrentEnemy(prev => ({ ...prev, isAnimating: false, currentSprite: 'idle' }));
             }, 300);
         } else {
             setPlayerState(prev => ({
@@ -103,27 +199,28 @@ const BattleUI = () => {
     };
 
     const handleEnemyTurn = () => {
-    // tranca ações enquanto o inimigo faz a dele
         setActionLocked(true);
         setTurnState('ENEMY');
         setMenuState('ENEMY_TURN');
+        
+        setCurrentEnemy(prev => ({ ...prev, currentSprite: 'attack' }));
         setMessage(`${currentEnemy.name} se prepara para atacar!`);
 
         setTimeout(() => { 
             const effectiveDef = (playerState.def || 0) + (playerState.tempDef || 0);
             const damage = Math.max(0, currentEnemy.atk - effectiveDef);
-            const finalDamage = Math.floor(damage * (1 + Math.random() * 0.3)); // dano com variação de até 30%
+            const finalDamage = Math.floor(damage * (1 + Math.random() * 0.3));
 
             applyDamage('player', finalDamage);
             setMessage(`${currentEnemy.name} ataca e causa ${finalDamage} de dano!`);
 
-            setTimeout(() => { // volta pro turno do player se ele não morreu
+            setTimeout(() => {
                 if (playerState.hp - finalDamage > 0) {
                     setTurnState('PLAYER');
                     setMenuState('MAIN');
                     setMessage('Seu turno! Escolha uma ação...');
+                    setCurrentEnemy(prev => ({ ...prev, currentSprite: 'idle' }));
                 }
-                // limpa o buff de defesa temporário depois do turno inimigo
                 if (playerState.tempDef && playerState.tempDef > 0) {
                     setPlayerState(prev => ({ ...prev, tempDef: 0 }));
                 }
@@ -135,19 +232,19 @@ const BattleUI = () => {
     const handleNewBattle = () => {
         setCurrentEnemy({
             ...ENEMIES[Math.floor(Math.random() * ENEMIES.length)],
-            isAnimating: false
+            isAnimating: false,
+            currentSprite: 'idle'
         });
         setPlayerState(prev => ({ ...prev, isAnimating: false, tempDef: 0 }));
-        dropProcessedRef.current = false; // reseta a chance de drop
+        dropProcessedRef.current = false;
         setMenuState('MAIN');
         setTurnState('PLAYER');
         setMessage('Um novo inimigo aparece! Prepare-se para a batalha!');
     };
 
-    const handleDefend = () => { //funão defesa
+    const handleDefend = () => {
         if (turnState !== 'PLAYER' || actionLocked) return;
         setActionLocked(true);
-        // aplica um buff temporário de defesa (50% da defesa base, arredondado para cima)
         setPlayerState(prev => ({ ...prev, tempDef: Math.ceil((prev.def || 0) * 0.5) }));
         setMessage(`${playerState.name} se protege — DEF aumentada por 1 turno!`);
 
@@ -156,7 +253,7 @@ const BattleUI = () => {
         }, 700);
     };
 
-    const handleAttack = () => { // função ataque
+    const handleAttack = () => {
         if (turnState !== 'PLAYER' || actionLocked) return;
         setMenuState('TARGET_ENEMY');
         setMessage('Selecione um alvo...');
@@ -165,7 +262,6 @@ const BattleUI = () => {
     const handleSelectEnemyTarget = () => {
         if (turnState !== 'PLAYER' || actionLocked) return;
 
-    // trava a ação pra evitar cliques duplos
         setActionLocked(true);
         setTurnState('ENEMY');
 
@@ -175,38 +271,34 @@ const BattleUI = () => {
         applyDamage('enemy', finalDamage);
         setMessage(`${playerState.name} ataca ${currentEnemy.name} causando ${finalDamage} de dano!`);
 
-        // se inimigo ainda vivo, ele contra-ataca após breve delay
         setTimeout(() => {
             if (currentEnemy.hp - finalDamage > 0) {
                 handleEnemyTurn();
             } else {
-                // se o bicho morreu, deixamos o useEffect agir
                 setActionLocked(false);
             }
         }, 1500);
     };
 
-    const handleOpenItemMenu = () => { // função item
+    const handleOpenItemMenu = () => {
         if (turnState !== 'PLAYER' || actionLocked) return;
         setMenuState('ITEM');
     };
 
     const handleUsePotion = () => {
         if (actionLocked || turnState !== 'PLAYER' || (playerState.potions || 0) <= 0) return;
-    // usa a poção e cura o player
         setActionLocked(true);
         const heal = 50;
         setPlayerState(prev => ({ ...prev, hp: Math.min(prev.maxHp, prev.hp + heal), potions: (prev.potions || 0) - 1 }));
         setMessage(`${playerState.name} usa uma Poção de Vida e recupera até ${heal} HP!`);
 
         setTimeout(() => {
-            // volta pro menu e chama o turno do inimigo depois da cura
             setMenuState('MAIN');
             handleEnemyTurn();
         }, 900);
     };
 
-    const renderMainMenu = () => ( // aba de ações da direita
+    const renderMainMenu = () => (
         <div className="battle-window command-menu">
             <ul>
                 <li onClick={handleAttack} role="button" tabIndex={0}>Atacar</li>
@@ -231,14 +323,13 @@ const BattleUI = () => {
     const renderVictoryDefeatMenu = () => (
         <div className="battle-window victory-defeat-menu">
             <ul>
-                {/* só mostra Continuar, se for vitória */}
                 {menuState === 'VICTORY' && <li onClick={handleNewBattle}>Continuar</li>}
                 <li onClick={() => window.location.href = '/'}>Voltar ao Menu</li>
             </ul>
         </div>
     );
 
-    return ( // tela de batalha
+    return (
         <div className={`battle-screen ${menuState === 'VICTORY' ? 'victory' : ''} ${menuState === 'DEFEAT' ? 'defeat' : ''}`}>
             <div className="enemy-area">
                 <div
@@ -246,9 +337,11 @@ const BattleUI = () => {
                     onClick={() => menuState === 'TARGET_ENEMY' && handleSelectEnemyTarget(currentEnemy.id)}
                 >
                     <div className="enemy-name">{currentEnemy.name}</div>
-                    <img src="https://via.placeholder.com/128x128.png?text=Enemy" alt={currentEnemy.name} />
+                    <img 
+                        src={currentEnemy.sprites ? currentEnemy.sprites[currentEnemy.currentSprite || 'idle'] : "https://via.placeholder.com/128x128.png?text=Enemy"} 
+                        alt={currentEnemy.name} 
+                    />
 
-                    {/* barra de HP */}
                     <div className="hp-bar enemy-hp-bar" aria-hidden>
                         <div
                             className="hp-fill"
@@ -267,7 +360,6 @@ const BattleUI = () => {
                         <span className="name">{playerState.name}</span>
                         <span className="hp">HP: {playerState.hp} / {playerState.maxHp}</span>
 
-                        {/* barra de HP do jogador*/}
                         <div className="hp-bar player-hp-bar" aria-hidden>
                             <div
                                 className="hp-fill"
@@ -275,10 +367,10 @@ const BattleUI = () => {
                             />
                         </div>
 
-                                <div className="stats">
-                                    <span>ATK: {playerState.atk}</span>
-                                    <span>DEF: {playerState.def + (playerState.tempDef || 0)}{playerState.tempDef ? ` (+${playerState.tempDef})` : ''}</span>
-                                </div>
+                        <div className="stats">
+                            <span>ATK: {playerState.atk}</span>
+                            <span>DEF: {playerState.def + (playerState.tempDef || 0)}{playerState.tempDef ? ` (+${playerState.tempDef})` : ''}</span>
+                        </div>
                     </div>
                 </div>
 
