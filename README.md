@@ -77,13 +77,3 @@ A aplicação será iniciada no seu navegador padrão no endereço `http://local
 | **Johny** (JustJk) | Mecânicas de Combate & Balanceamento | [@JustJk](https://github.com/JustJKz) |
 | **Ithalo** (Flork) | Sound Design & Atmosfera | [@Flork](https://github.com/ithalo098) |
 | **Ian** (Ecko) | Front-End & Estilização (UI) | [@Ecko](https://github.com/ianzrocha) |
-
-
-
-
-
-
-  
-
----
-*Este projeto é para fins educacionais.*
