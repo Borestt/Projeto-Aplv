@@ -61,7 +61,6 @@ A aplicação será iniciada no seu navegador padrão no endereço `http://local
 * `/src/contexts`: Lógica para o audio se aplicar globalmente no projeto
 * `/src/index.css`: Botão de voltar para aba o Home
 * `/src/main.jsx`: Lógica central de todo o projeto, é aqui o coração! Responsável por permitir a ferramenta BrowserRouter linkar as páginas
-* 
 
 ## Melhorias Futuras
 
